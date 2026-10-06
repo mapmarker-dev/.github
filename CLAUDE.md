@@ -1,0 +1,128 @@
+# mapmarker-dev 공통 규칙
+
+`mapmarker-dev` 조직의 모든 저장소에 적용하는 규칙이다. 각 저장소의 `CLAUDE.md`가 이 파일을 `@../.github/CLAUDE.md`로 불러온다. 저장소별 명령어와 규칙은 각 저장소의 `CLAUDE.md`에 쓴다.
+
+## 소통
+
+- 사용자에게는 항상 한국어로 답한다.
+
+## 저장소 구성
+
+모든 저장소를 같은 부모 폴더 아래에 나란히 클론한다. 이 배치여야 각 저장소의 `CLAUDE.md`가 이 파일을 불러올 수 있다.
+
+```
+<작업 폴더>/
+├─ .github/            조직 소개, 공통 규칙(이 파일), 기획 문서
+├─ mapmarker_app/      Flutter 앱 (원격: mapmarker-app)
+├─ mapmarker-server/   NestJS 서버
+└─ mapmarker-web/      정적 웹 페이지
+```
+
+## 컴퓨터 첫 설정
+
+1. 커밋 이메일: `git config --global user.email`이 `84309189+SJ-1220@users.noreply.github.com`이 아니면 설정을 안내한다. 이메일 설정이 안 돼 있던 다른 컴퓨터에서 설정을 마치면 1번 항목 삭제.
+   ```bash
+   git config --global user.name "SJ-1220"
+   git config --global user.email "84309189+SJ-1220@users.noreply.github.com"
+   ```
+2. 저장소 배치: 네 저장소가 같은 부모 폴더 아래에 나란히 있는지 확인한다. 없는 저장소는 클론을 안내한다. 앱은 폴더 이름을 `mapmarker_app`으로 클론한다.
+   ```bash
+   git clone https://github.com/mapmarker-dev/.github.git
+   git clone https://github.com/mapmarker-dev/mapmarker-app.git mapmarker_app
+   git clone https://github.com/mapmarker-dev/mapmarker-server.git
+   git clone https://github.com/mapmarker-dev/mapmarker-web.git
+   ```
+
+## 기획 문서
+
+- 큰 그림과 결정 이유: `.github/docs/OVERVIEW.md`
+- 단계별 계획: `.github/docs/PLAN.md`
+- 기획이나 범위를 논의할 때는 먼저 두 문서를 읽는다.
+- **구현 중 두 문서와 달라지는 부분이 생기면 곧바로 멈추고 사용자에게 문의한다.** 임의로 진행하지 않는다. 결정되면 문서도 갱신한다.
+
+## push 규칙
+
+- push(원격 브랜치 삭제 포함)는 사용자가 명확히 요청할 때만 한다. 그 외에는 실행할 명령어만 알려 준다.
+
+## 커밋 메시지 ("~에 대한 커밋메세지 줘")
+
+- 대상이 커밋 해시면 `git show`로, 기능 이름이면 현재 변경 사항(`git diff`)으로 내용을 확인한다.
+- 커밋 메시지만 코드 블록으로 준다. 커밋과 push는 하지 않는다.
+- 영어로, 간결하고 전문적인 톤으로 쓰며 형식을 반드시 지킨다.
+
+```
+Feat: add InteractiveViewer for zoom and pan on 9x9 grid
+```
+
+변경이 많으면 빈 줄 뒤에 bullet로 세부 내용을 덧붙인다.
+
+```
+Refactor: implement 3-layer design system and apply config tokens
+
+- Add AppTheme class
+- Replace hardcoded styles across screens/widgets with config tokens
+```
+
+## 공개 저장소 주의
+
+모든 저장소는 GitHub에 public으로 공개돼 있다. **항상 보안에 유의한다.** 커밋하기 전에 변경 내용에 비밀값이 없는지 확인한다.
+
+- API 키, 비밀번호, Client Secret, JWT 키, AWS 키는 절대 커밋하지 않는다. `.env`는 `.gitignore`에 넣고, CI용 값은 GitHub Secrets에 둔다.
+- 앱에 들어가는 키(지도 Client ID 등)는 숨길 수 없으니 각 콘솔에서 패키지 이름이나 키 해시로 사용을 제한한다.
+- `HANDOFF.md`와 문서에 개인정보, 회사 이야기, 키 값을 적지 않는다.
+
+## 작업 인수인계
+
+Claude Code의 대화 기록과 메모리는 컴퓨터와 계정 사이에 공유되지 않는다. 그래서 작업 맥락은 **작업한 저장소 안의 `HANDOFF.md`**로 넘긴다. 아래 절차는 저장소마다 따로 적용한다.
+
+### "인수인계해줘"
+
+먼저 "기능 개발을 마치고 커밋까지 한 상태인가요, 아직 작업 중인가요?"라고 묻고 답을 기다린다. 여러 저장소에서 작업했다면 어느 저장소들인지도 확인한다.
+
+**A. 기능 완료 + 커밋한 상태**
+
+1. 커밋되지 않은 변경이 남아 있으면 알리고 어떻게 할지 묻는다.
+2. `HANDOFF.md`를 갱신하고 커밋한다.
+3. 예전에 만든 임시 브랜치(`wip/<현재 브랜치>`)가 원격에 남아 있으면, 이제 필요 없으니 삭제하라고 알린다. (`git push origin --delete wip/<현재 브랜치>`)
+
+**B. 아직 작업 중**
+
+작업 중인 내용은 임시 브랜치 `wip/<원래 브랜치>`에만 커밋한다. 원래 브랜치에는 작업 중 커밋을 남기지 않기 위해서다. 예: `feature/marker-list` → `wip/feature/marker-list`
+
+1. 원래 브랜치에 push하지 않은 커밋이 있으면 알린다. 임시 브랜치보다 먼저 push해야 한다.
+2. `git switch -C wip/<원래 브랜치>`로 임시 브랜치를 만든다.
+3. `HANDOFF.md`를 갱신하고, 모든 변경을 `WIP: <작업 요약>`으로 커밋한다.
+4. `git switch <원래 브랜치>`로 돌아온다.
+5. 임시 브랜치 push 명령어를 알려 준다: `git push -f -u origin wip/<원래 브랜치>` (`-f`: 같은 이름의 예전 임시 브랜치를 덮어쓴다)
+
+### "이어서 작업해줘"
+
+0. "컴퓨터 첫 설정" 항목이 남아 있으면 확인한다.
+1. `git fetch --prune`으로 원격 상태를 받아 온다.
+2. 현재 브랜치의 임시 브랜치 `origin/wip/<브랜치>`가 있으면, 가져올지 묻는다. 가져오기로 하면:
+   - `git pull` → `git merge --squash origin/wip/<브랜치>` → `git reset`
+   - 결과: 작업 중이던 내용이 원래 브랜치에 **커밋하지 않은 변경**으로 들어온다. WIP 커밋은 히스토리에 남지 않는다.
+   - 임시 브랜치는 바로 삭제하지 않는다. 기능 완료 후 인수인계(A-3) 때 정리한다.
+3. 임시 브랜치가 없으면 `git pull`만 한다.
+4. `.github` 저장소도 `git pull`로 최신 기획 문서를 받는다.
+5. `HANDOFF.md`와 `git log --oneline -10`을 읽고, "다음에 할 첫 단계"부터 이어서 작업한다.
+
+### HANDOFF.md 형식
+
+다른 사람이 대화 기록 없이 읽어도 이해할 수 있게 쓴다. "왜 그렇게 했는지"를 꼭 남긴다.
+
+```markdown
+# HANDOFF
+
+- 날짜:
+- 작성자 / 컴퓨터:
+- 원래 브랜치:
+- 상태: 기능 완료 / 작업 중
+
+## 한 작업
+## 현재 상태
+## 내린 결정과 이유
+## 남은 할 일
+## 막힌 부분 / 주의할 점
+## 다음에 할 첫 단계
+```
