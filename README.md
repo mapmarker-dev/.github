@@ -7,15 +7,9 @@
 - `docs/OVERVIEW.md`: 큰 그림과 결정 이유
 - `docs/PLAN.md`: 단계별 계획
 
-## 새 컴퓨터에서 시작하기
-
 ```bash
-git config --global user.name "SJ-1220"
-git config --global user.email "84309189+SJ-1220@users.noreply.github.com"
-
-# 같은 부모 폴더 아래에 나란히 클론
 git clone https://github.com/mapmarker-dev/.github.git
-git clone https://github.com/mapmarker-dev/mapmarker-app.git mapmarker_app
+git clone https://github.com/mapmarker-dev/mapmarker-app.git
 git clone https://github.com/mapmarker-dev/mapmarker-server.git
 git clone https://github.com/mapmarker-dev/mapmarker-web.git
 ```
