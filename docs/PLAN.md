@@ -1,6 +1,6 @@
 # MapMarker 단계별 계획
 
-> 최종 갱신: 2026-10-22 · 큰 그림과 결정 이유는 [OVERVIEW.md](OVERVIEW.md) 참고
+> 최종 갱신: 2026-10-30 · 큰 그림과 결정 이유는 [OVERVIEW.md](OVERVIEW.md) 참고
 >
 > 각 단계는 **완료 기준**을 만족해야 끝난 것으로 본다. 모든 단계의 완료 기준에는 **테스트 통과**(서버 Jest, 앱 `flutter test`)가 포함된다. 인프라를 바꿀 때는 `문제 → 측정 → 설계 → 적용 → 검증`을 `docs/`에 기록한다.
 
@@ -26,17 +26,18 @@
 - [x] GitHub 조직 `mapmarker-dev`와 저장소 4개(`.github`, `mapmarker-app`, `mapmarker-server`, `mapmarker-web`) 만들기
 - [x] 공통 규칙(`.github/CLAUDE.md`)과 기획 문서를 `.github` 저장소로 옮기기
 - [ ] GitHub 설정: 2단계 인증, 커밋 이메일을 noreply 주소로 설정, 저장소별 Secret scanning·Push protection 켜기
-- [ ] `mapmarker-server`에 NestJS + Prisma 프로젝트 만들기. `.env`가 `.gitignore`에 있는지 첫 커밋 전에 확인한다. `CLAUDE.md`에 공통 규칙 불러오기와 서버 명령어를 쓴다
+- [x] `mapmarker-server`에 NestJS + Prisma 프로젝트 만들기. `.env`가 `.gitignore`에 있는지 첫 커밋 전에 확인한다. `CLAUDE.md`에 공통 규칙 불러오기와 서버 명령어를 쓴다
 - [x] 네이버 클라우드 플랫폼: 지도 SDK 키 발급
 - [ ] 네이버 개발자센터 / 카카오 개발자: 소셜 로그인 앱 등록
 - [ ] AWS 계정: 루트 계정 MFA 설정, IAM 사용자 생성, **Budget 알림 설정**
-- [ ] 로컬 개발 환경: Docker로 PostgreSQL 실행
+- [x] 로컬 개발 환경: Docker로 PostgreSQL 실행
 - [x] **Flutter 앱 구조 결정**: 상태 관리, 라우팅(3단계 딥링크 처리 고려), 폴더 구조
   - 상태 관리: **Riverpod** (코드 생성 없이). 저장소는 인터페이스로 두고, 서버 API가 생기기 전에는 메모리 구현으로 화면을 만든다
   - 라우팅: **go_router**. 공유 링크 `/trip/<공유ID>`는 앱 안에서 redirect로 읽기 전용 화면 경로에 연결한다. 모든 화면 경로를 여행 목록 아래에 둬서, 링크로 바로 열어도 뒤로가기가 여행 목록으로 간다
   - 폴더 구조: 모델·저장소는 공용 `data/`, 화면과 상태는 기능별 `features/`, 지도 인터페이스와 곡선 계산은 `core/`. 거의 모든 기능이 같은 Trip 묶음(Trip·Stop·Segment·Photo)을 다루기 때문이다
   - 이미지 내보내기 검증 화면은 디버그 빌드에서만 열리게 남겨 두고(지도 SDK·Flutter를 올릴 때 다시 확인하는 용도), 1-5단계 미리보기 화면이 생기면 지운다
-- [ ] 테스트 기본 설정: 서버 Jest(단위 + e2e), 앱 `flutter test`(단위 + 위젯)
+- [x] 테스트 기본 설정: 서버 Jest(단위 + e2e), 앱 `flutter test`(단위 + 위젯)
+  - 서버 e2e는 같은 Docker PostgreSQL 안의 테스트 DB(이름이 `_test`로 끝남)를 실행할 때마다 다시 만들어 쓴다
 - [x] **이미지 내보내기 기술 검증 (프로토타입)**: 핵심 기능 Top 2이고 기술 위험이 가장 큰 부분이라 먼저 확인한다 (앱 저장소 PR #1)
   - 질문: 네이버 지도 SDK 스냅샷으로 지도 이미지를 얻고, 그 위에 선·마커·사진을 합성해 고해상도 PNG로 저장할 수 있는지
   - **결정: SDK 스냅샷(`takeSnapshot`) 위에 Flutter Canvas로 직접 합성한다.** Static Map API 대안은 쓰지 않는다
@@ -58,12 +59,15 @@
 
 ### 1-1. 서버 기본
 
-- [ ] NestJS 프로젝트 구조 잡기 (Module / Controller / Service), Swagger 설정
-- [ ] Prisma 스키마 작성: User, Trip, Stop, Segment, Photo
+- [x] NestJS 프로젝트 구조 잡기 (Module / Controller / Service), Swagger 설정
+  - 기능 API는 `/v1` 아래(URI 버전), 상태 확인 `/health`는 버전 없음. Swagger는 `/docs`이고 운영에서는 열지 않는다
+- [x] Prisma 스키마 작성: User, Trip, Stop, Segment, Photo
   - ID: 앱이 만든 UUID v7을 그대로 쓴다 (형식 검사, 이미 있으면 409). 공유 ID만 서버가 만든다
   - Trip: 기간(시작일·종료일 `date`, 없을 수 있음), 직접 바꾼 상태(없으면 자동)
   - Stop: 예정 시각(일차 + 현지 시:분 `time`), 실제 시각(`timestamptz`)과 **시간대**(예: `Asia/Seoul`), `placeProvider`·`placeId`(선택 필드로 미리 둔다)
   - Segment: 이동 수단 목록(수단, 정류장 수, 걸리는 시간), 곡률 `k`, 타입(일반 / GPS 트랙)
+  - 앱 모델의 규칙(기간과 박 수, 일차·순서, 구간은 장소마다 들고 나는 것 하나씩, 곡률 범위)을 DB 제약으로도 막고, e2e로 확인한다
+- [ ] **CI(5단계에서 앞당김)**: GitHub Actions로 push·PR마다 서버 lint·형식·단위·e2e(PostgreSQL 서비스 컨테이너)·빌드를 돌린다. 깨진 코드가 `main`에 들어가지 않게 로그인·CRUD보다 먼저 넣는다. 배포(CD)는 AWS 배포(1-7) 이후에 붙인다
 - [ ] 카카오·네이버 로그인
   - 앱이 받은 토큰을 서버가 검증하고, 서버가 자체 JWT(access, refresh)를 발급한다
 - [ ] Trip / Stop / Segment CRUD API, 입력 검증(DTO)
@@ -250,7 +254,7 @@
 
 - [ ] 느린 쿼리를 찾아 DB 인덱스를 추가하고 전후를 비교한다
 - [ ] 측정 근거가 있을 때만 캐시(Redis) 도입: 예를 들어 반복 조회와 AI 결과
-- [ ] CI/CD: GitHub Actions로 테스트, 빌드, EC2 배포
+- [ ] CI/CD: GitHub Actions로 테스트, 빌드, EC2 배포 (서버 테스트 CI는 1-1에서 먼저 넣는다)
 - [ ] 모니터링: CloudWatch 대시보드와 알람, 에러 추적
 - [ ] 장애 대응 기록, 비용 점검과 최적화
 
