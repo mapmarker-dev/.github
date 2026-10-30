@@ -57,7 +57,8 @@ Refactor: implement 3-layer design system and apply config tokens
 
 모든 저장소는 GitHub에 public으로 공개돼 있다. **항상 보안에 유의한다.** 커밋하기 전에 변경 내용에 비밀값이 없는지 확인한다.
 
-- API 키, 비밀번호, Client Secret, JWT 키, AWS 키는 절대 커밋하지 않는다. `.env`는 `.gitignore`에 넣고, CI용 값은 GitHub Secrets에 둔다.
+- API 키, 비밀번호, Client Secret, JWT 키, AWS 키는 절대 커밋하지 않는다. `.env`는 `.gitignore`에 넣고, CI에서 쓰는 실제 비밀값(배포 키, AWS 키 등)은 GitHub Secrets에 둔다.
+- 예외: CI 안에서만 띄우고 버리는 테스트용 서비스(예: e2e용 PostgreSQL 컨테이너)의 비밀번호는 워크플로 파일에 적어도 된다. 밖에서 접속할 수 없고 실제 데이터도 없기 때문이다. 이 값은 다른 곳(로컬 `.env`, 운영 DB)에 재사용하지 않는다.
 - 앱에 들어가는 키(지도 Client ID 등)는 숨길 수 없으니 각 콘솔에서 패키지 이름이나 키 해시로 사용을 제한한다.
 - `HANDOFF.md`와 문서에 개인정보, 회사 정보, 키 값을 적지 않는다.
 

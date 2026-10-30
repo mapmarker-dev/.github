@@ -25,7 +25,7 @@
 
 - [x] GitHub 조직 `mapmarker-dev`와 저장소 4개(`.github`, `mapmarker-app`, `mapmarker-server`, `mapmarker-web`) 만들기
 - [x] 공통 규칙(`.github/CLAUDE.md`)과 기획 문서를 `.github` 저장소로 옮기기
-- [ ] GitHub 설정: 2단계 인증, 커밋 이메일을 noreply 주소로 설정, 저장소별 Secret scanning·Push protection 켜기
+- [x] GitHub 설정: 2단계 인증, 커밋 이메일을 noreply 주소로 설정, 저장소별 Secret scanning·Push protection 켜기
 - [x] `mapmarker-server`에 NestJS + Prisma 프로젝트 만들기. `.env`가 `.gitignore`에 있는지 첫 커밋 전에 확인한다. `CLAUDE.md`에 공통 규칙 불러오기와 서버 명령어를 쓴다
 - [x] 네이버 클라우드 플랫폼: 지도 SDK 키 발급
 - [ ] 네이버 개발자센터 / 카카오 개발자: 소셜 로그인 앱 등록
@@ -68,6 +68,8 @@
   - Segment: 이동 수단 목록(수단, 정류장 수, 걸리는 시간), 곡률 `k`, 타입(일반 / GPS 트랙)
   - 앱 모델의 규칙(기간과 박 수, 일차·순서, 구간은 장소마다 들고 나는 것 하나씩, 곡률 범위)을 DB 제약으로도 막고, e2e로 확인한다
 - [ ] **CI(5단계에서 앞당김)**: GitHub Actions로 push·PR마다 서버 lint·형식·단위·e2e(PostgreSQL 서비스 컨테이너)·빌드를 돌린다. 깨진 코드가 `main`에 들어가지 않게 로그인·CRUD보다 먼저 넣는다. 배포(CD)는 AWS 배포(1-7) 이후에 붙인다
+  - `main`·`dev`·`test` push와 `main`으로 가는 PR에서 작업 하나(`check`)로 돌린다. `main`은 PR로만 병합하고 `check` 통과가 필요하다. `dev`는 force push·삭제만 막는다
+  - CI 테스트 DB 비밀번호는 그 안에서만 쓰고 버리는 값이라 워크플로에 적는다(공통 규칙 "공개 저장소 주의"의 예외)
 - [ ] 카카오·네이버 로그인
   - 앱이 받은 토큰을 서버가 검증하고, 서버가 자체 JWT(access, refresh)를 발급한다
 - [ ] Trip / Stop / Segment CRUD API, 입력 검증(DTO)
