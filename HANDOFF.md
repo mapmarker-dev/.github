@@ -4,13 +4,13 @@
 
 ## 지금 하는 일
 
-1-1단계(서버 기본)를 진행한다. 서버 단위는 "자체 JWT 인증 + Trip/Stop/Segment CRUD"를 하고 있다(소셜 로그인은 그다음). 서버 진행은 `../mapmarker-server/HANDOFF.md`를 본다.
-
-- PLAN 1-1: JWT 인증과 여행 상태(직접 바꾼 상태를 API로 받고 돌려줌)를 체크했다. CRUD는 여행까지 됐고 장소·구간 쓰기가 남았다.
+1-1단계(서버 기본)를 진행한다. 서버 단위 "자체 JWT 인증 + Trip/Stop/Segment CRUD"를 서버 `main`에 병합했다(PLAN 1-1의 JWT·CRUD·여행 상태 체크). 1-1에 남은 것은 카카오·네이버 로그인이다. 서버 진행은 `../mapmarker-server/HANDOFF.md`를 본다.
 
 ## 다음에 할 첫 단계
 
-서버의 장소·구간 쓰기(C)를 구현한다(`../mapmarker-server/HANDOFF.md`). 끝나면 PLAN 1-1의 CRUD 항목을 체크한다.
+다음 서버 단위는 소셜 로그인이고, 네이버·카카오 앱 등록(0단계)이 먼저다.
+
+- 조직 소개(`profile/README.md`)의 진행 상황을 서버 API 완료에 맞게 고쳤다.
 
 0단계에 남은 것은 소셜 로그인 앱 등록과 AWS 계정이다. 앱 쪽 진행은 `../mapmarker-app/HANDOFF.md`를 본다.
 
