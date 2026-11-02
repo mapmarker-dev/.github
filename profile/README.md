@@ -13,7 +13,7 @@
 | 🔗 | **공유와 복사**: 친구가 공유한 여행을 보고, 내 여행으로 복사해서 수정 | 📅 예정 |
 | 🤖 | **AI 동선 생성**: 여행지, 계절, 일정을 입력하면 AI가 동선 초안을 생성 | 📅 예정 |
 
-지금은 1단계(MVP)를 진행하고 있습니다. 앱의 지도·동선 편집과 서버의 인증·여행 API를 마쳤고, 다음은 소셜 로그인과 앱의 서버 연동입니다. 단계별 진행 상황은 [PLAN](https://github.com/mapmarker-dev/.github/blob/main/docs/PLAN.md)에 있습니다.
+지금은 1단계(MVP)를 진행하고 있습니다. 앱의 지도·동선 편집과 서버의 카카오·네이버 로그인·여행 API를 마쳤고, 다음은 앱의 서버 연동입니다. 단계별 진행 상황은 [PLAN](https://github.com/mapmarker-dev/.github/blob/main/docs/PLAN.md)에 있습니다.
 
 ## 저장소
 
