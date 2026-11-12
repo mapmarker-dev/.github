@@ -44,6 +44,23 @@ Refactor: implement 3-layer design system and apply config tokens
 - Replace hardcoded styles across screens/widgets with config tokens
 ```
 
+## PR 설명 ("PR 설명 써줘", PR을 만들 때)
+
+- 현재 브랜치와 `main`을 비교해(`git log main..HEAD`, `git diff main...HEAD`) 한국어로 간결하게 쓴다.
+- 작업 폴더(저장소들의 부모 폴더)에 `PR_DESCRIPTION-<저장소 이름>.md`로 저장한다(예: `PR_DESCRIPTION-mapmarker-app.md`). 저장소 밖이라 커밋에 섞이지 않고, 여러 저장소의 PR을 함께 써도 겹치지 않는다.
+- 아래 구조를 반드시 따른다. 섹션 제목은 영어 이름(예: `## Summary`), 내용은 한국어다.
+  1. **PR Title**: GitHub PR에 쓸 공식 제목
+  2. **Header**: 요약 위에 표시할 설명적인 제목
+  3. **Summary**: 전체 변경의 개괄
+  4. **Key Changes**: 기술·로직 변경(글머리 기호 3~6개)
+  5. **Implemented Features**: 이번 PR로 사용자가 직접 겪는 기능(글머리 기호 3~6개)
+  6. **동적 섹션 하나**: 변경의 성격(UI 전면 개편, 대규모 리팩터링, 버그 수정, 신규 기능 등)을 분석해 가장 맞는 섹션을 골라 더한다. 예시에 묶이지 않는다.
+     - `How to Test`: 테스트 방법
+     - `Before vs After UI`: UI 변경 전후 비교와 스크린샷. 화면 변경이 많으면 필수이고, 어떤 화면을 캡처하면 좋을지 알려 준다
+     - `Migration/Breaking Changes`: 마이그레이션과 호환성을 깨는 변경
+     - `Performance Impact`: 성능에 미치는 영향
+- PR을 만들고 합치는 것은 사용자가 요청할 때만 한다. 합칠 때는 merge commit이다.
+
 ## 공개 저장소 주의
 
 모든 저장소는 GitHub에 public이다. **항상 보안에 유의하고**, 커밋 전에 변경 내용에 비밀값이 없는지 확인한다.
